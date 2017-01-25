@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/m8ms/dynamic-public-path-webpack-plugin/issues"
   },
-  "homepage": "https://github.com/m8ms/dynamic-public-path-webpack-plugin#readme"
+  "homepage": "https://github.com/m8ms/dynamic-public-path-webpack-plugin#readme",
+  "devDependencies": {
+    "eslint": "^3.14.1"
+  }
 }
