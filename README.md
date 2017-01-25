@@ -71,7 +71,7 @@ module.exports = {
     },
     output: {
         filename: '[name].js',
-        path: './dist/,
+        path: './dist/',
         publicPath: 'http://publicPath.com'
     },
     plugins: [
