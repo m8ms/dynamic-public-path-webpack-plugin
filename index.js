@@ -32,7 +32,7 @@ function DynamicPublicPathPlugin(options) {
  */
 DynamicPublicPathPlugin.prototype.apply = function(compiler) {
 
-    if(this.options.externalGlobal && this.options.chunkName) {
+    if(this.options && this.options.externalGlobal && this.options.chunkName) {
         compiler.plugin('after-emit', (compilation, callback) => {
 
             var publicPathToReplace,
