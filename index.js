@@ -27,73 +27,92 @@ function DynamicPublicPathPlugin(options) {
 }
 
 /**
+ * Finds asset file and replaces all publicPath occurrences with externalGlobal.
  *
- * @param compiler - comes from webpack
+ * @param {object} compiler - comes from webpack
  */
 DynamicPublicPathPlugin.prototype.apply = function(compiler) {
 
     if(this.options && this.options.externalGlobal && this.options.chunkName) {
         compiler.plugin('after-emit', (compilation, callback) => {
 
-            var publicPathToReplace,
-                chunk,
-                jsfile,
-                manifestAsset,
-                filePath;
+            if(compilation.options.output && compilation.options.output.publicPath){
+                this.publicPathStr = '"' + compilation.options.output.publicPath + '"';
+            }else{
+                _log('error - output.publicPath must be defined in webpack config ' +
+                    '(used only as placeholder, make it distinctive)');
+                callback();
+                return;
+            }
 
-            //get path to file to open
-            publicPathToReplace = compilation.options.output.publicPath;
+            var chunk,
+                fileName,
+                filePath;
 
             chunk = compilation.chunks.find((chunk)=>{
                 return chunk.name === this.options.chunkName;
             });
 
-            jsfile = chunk.files.find((file)=>{
+            if(!chunk){
+                _log(' error - chunk "'+this.options.chunkName+'" does not exist.');
+                callback();
+                return;
+            }
+
+            // get file path
+            fileName = chunk.files.find((file) => {
                 return file.match(/.*\.js$/);
             });
 
-            manifestAsset = compilation.assets[jsfile];
+            filePath = path.resolve(compilation.assets[fileName].existsAt);
 
-            _log('attempting to modify: '+manifestAsset);
-
-
-            //open file
-            filePath = path.resolve(manifestAsset.existsAt);
-
-            fs.exists(filePath, (exists) => {
-                if (exists) {
-                    fs.readFile(filePath, 'utf8', (err, data) => {
-                        if (err) {
-                            _log('fs read error (' + err + ')');
-                            callback();
-                            return;
-                        }
-
-                        //change contents
-                        var result = data.replace('"' + publicPathToReplace + '"', this.options.externalGlobal);
-
-                        //save file
-                        fs.writeFile(filePath, result, 'utf8', (err) => {
-                            if (err) {
-                                _log('fs write error (' + err + ')');
-                            } else {
-                                _log('replaced publicPath');
-                            }
-
-                            callback();
-                        });
-                    });
-                } else {
-                    _log('could not find file (' + filePath + ')');
-                    callback();
-                }
-            });
+            this.doReplace(filePath, callback);
         });
     }else{
-        _log('some param missing: ');
-        console.log('    [mandatory] externalGlobal - name of global var you want to use as publicPath');
-        console.log('    [mandatory] chunkName - name of chunk you expect the manifest (webpack file) to be in (can be found in your CommonsChunkPlugin setup)');
+        _log('some params missing: ');
+        console.log('    [mandatory] externalGlobal - name of global var you want to use as publicPath.');
+        console.log('    [mandatory] chunkName - name of chunk in which to look for publicPath references.');
     }
+};
+
+/**
+ * Opens file and replaces content.
+ *
+ * @param {string} filePath
+ * @param {function} callback
+ */
+DynamicPublicPathPlugin.prototype.doReplace = function(filePath, callback){
+    _log('attempting to modify: ' + filePath);
+
+    // open file
+    fs.exists(filePath, (exists) => {
+        if (exists) {
+            fs.readFile(filePath, 'utf8', (err, data) => {
+                if (err) {
+                    _log('fs read error (' + err + ')');
+                    callback();
+                    return;
+                }
+
+                //change contents
+                var result = data.replace(this.publicPathStr, this.options.externalGlobal);
+
+                //save file
+                fs.writeFile(filePath, result, 'utf8', (err) => {
+                    if (err) {
+                        _log('fs write error (' + err + ')');
+                    } else {
+                        _log('replaced publicPath');
+                    }
+
+                    callback();
+                });
+            });
+        } else {
+            _log('could not find file (' + filePath + ')');
+            callback();
+        }
+    });
 };
 
 function _log(msg){
