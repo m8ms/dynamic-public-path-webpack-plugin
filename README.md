@@ -3,15 +3,17 @@ Allows you to use a global, client side variable to set publicPath instead of th
 
 Works with Webpack 2 and 1.
 
-### Installation 
+### Installation
+``` sh
     > npm i dynamic-public-path-webpack-plugin --save-dev
-    
+```
+
 ### Usage
 
 #### 1. Simple use
    webpack.conf.js:
 
-~~~~
+``` javascript
 const DynamicPublicPathPlugin = require("dynamic-public-path-webpack-plugin");
 
 module.exports = {
@@ -30,7 +32,7 @@ module.exports = {
         })
     ]
 }
-~~~~
+```
 
 **Important!** 
 Use distinctive strings as `output.publicPath`. 
