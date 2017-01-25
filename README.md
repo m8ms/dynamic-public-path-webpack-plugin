@@ -1,11 +1,13 @@
 # dynamic-public-path-webpack-plugin
-Allows you to use a global, client side variable to set publicPath instead of the string arbitrarily set options.publicPath.
+Allows you to use a global, client side variable to set publicPath 
+instead of the string arbitrarily set options.publicPath. 
+Very useful when working with CDNs.
 
 Works with Webpack 2 and 1.
 
 ### Installation
 ``` sh
-    > npm i dynamic-public-path-webpack-plugin --save-dev
+npm i dynamic-public-path-webpack-plugin --save-dev
 ```
 
 ### Usage

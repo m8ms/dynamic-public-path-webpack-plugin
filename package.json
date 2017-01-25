@@ -12,7 +12,8 @@
   },
   "keywords": [
     "webpack",
-    "publicPath"
+    "publicPath",
+    "cdn"
   ],
   "author": "Piotr Martyniak",
   "license": "MIT",
