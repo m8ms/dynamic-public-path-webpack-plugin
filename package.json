@@ -1,0 +1,23 @@
+{
+  "name": "dynamic-public-path-webpack-plugin",
+  "version": "1.0.0",
+  "description": "Use global, client side variable to set publicPath instead of string set options.publicPath",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/m8ms/dynamic-public-path-webpack-plugin.git"
+  },
+  "keywords": [
+    "webpack",
+    "publicPath"
+  ],
+  "author": "Piotr Martyniak",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/m8ms/dynamic-public-path-webpack-plugin/issues"
+  },
+  "homepage": "https://github.com/m8ms/dynamic-public-path-webpack-plugin#readme"
+}
