@@ -1,6 +1,6 @@
 {
   "name": "dynamic-public-path-webpack-plugin",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Use global, client side variable to set publicPath instead of string set options.publicPath",
   "main": "index.js",
   "scripts": {
