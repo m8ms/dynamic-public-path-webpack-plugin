@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Test 3</title>
+  <link href="style3.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+  <form id="search-form">
+    <input type="text" id="search-input" />
+    <button type="submit">search</button>
+  </form>
+  <table border="1" id="sortTable">
+    <tr>
+      <td>Apple</td>
+    </tr>
+    <tr>
+      <td>Samsung</td>
+    </tr>
+    <tr>
+      <td>Xiaomi</td>
+    </tr>
+    <tr>
+      <td>Huawei</td>
+    </tr>
+    <tr>
+      <td>Sony</td>
+    </tr>
+    <tr>
+      <td>Google Pixel</td>
+    </tr>
+    <tr>
+      <td>Microsoft</td>
+    </tr>
+    <tr>
+      <td>Motorola</td>
+    </tr>
+    <tr>
+      <td>Nokia</td>
+    </tr>
+    <tr>
+      <td>LG</td>
+    </tr>
+  </table>
+  <script>
+    const form = document.getElementById("search-form")
+    const tableTds = document.querySelectorAll("#sortTable tr td")
+    const input = document.getElementById("search-input")
+
+    form.onsubmit = (e) => {
+      e.preventDefault()
+
+      if (input.value) {
+        tableTds.forEach((td) => {
+          if (td.innerText.toLowerCase().includes(input.value.toLowerCase())) {
+            td.parentNode.classList.remove('hidden')
+          } else {
+            td.parentNode.classList.add('hidden')
+          }
+        })
+      }
+    }
+  </script>
+</body>
+</html>
