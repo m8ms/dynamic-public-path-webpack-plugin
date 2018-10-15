@@ -34,8 +34,7 @@ function DynamicPublicPathPlugin(options) {
 DynamicPublicPathPlugin.prototype.apply = function(compiler) {
 
     if(this.options && this.options.externalGlobal && this.options.chunkName) {
-        compiler.plugin('after-emit', (compilation, callback) => {
-
+        compiler.hooks.afterEmit.tap({name: 'DynamicPublicPathPlugin'}, (compilation) => {
             this.compilation = compilation;
 
             if(compilation.options.output && compilation.options.output.publicPath){
@@ -43,7 +42,6 @@ DynamicPublicPathPlugin.prototype.apply = function(compiler) {
             }else{
                 this.err('output.publicPath must be defined in webpack config ' +
                     '(used only as placeholder, make it distinctive)');
-                callback();
                 return;
             }
 
@@ -57,7 +55,6 @@ DynamicPublicPathPlugin.prototype.apply = function(compiler) {
 
             if(!chunk){
                 this.err('chunk "'+this.options.chunkName+'" does not exist.');
-                callback();
                 return;
             }
 
@@ -68,7 +65,7 @@ DynamicPublicPathPlugin.prototype.apply = function(compiler) {
 
             filePath = path.resolve(compilation.assets[fileName].existsAt);
 
-            this.doReplace(filePath, callback);
+            this.doReplace(filePath);
         });
     }else{
         this.err('params missing: \n[mandatory] externalGlobal - name of global var you want to use as publicPath.\n[mandatory] chunkName - name of chunk in which to look for publicPath references.');
@@ -79,9 +76,8 @@ DynamicPublicPathPlugin.prototype.apply = function(compiler) {
  * Opens file and replaces content.
  *
  * @param {string} filePath
- * @param {function} callback
  */
-DynamicPublicPathPlugin.prototype.doReplace = function(filePath, callback){
+DynamicPublicPathPlugin.prototype.doReplace = function(filePath){
     this.log('attempting to modify: ' + filePath);
 
     // open file
@@ -90,7 +86,6 @@ DynamicPublicPathPlugin.prototype.doReplace = function(filePath, callback){
             fs.readFile(filePath, 'utf8', (err, data) => {
                 if (err) {
                     _log('fs read error (' + err + ')');
-                    callback();
                     return;
                 }
 
@@ -104,13 +99,10 @@ DynamicPublicPathPlugin.prototype.doReplace = function(filePath, callback){
                     } else {
                         this.log('replaced publicPath');
                     }
-
-                    callback();
                 });
             });
         } else {
             this.err('could not find file (' + filePath + ')');
-            callback();
         }
     });
 };
